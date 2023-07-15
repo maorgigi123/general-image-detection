@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/general-image-detection/static/css/main.d1206111.css",
+    "main.js": "/general-image-detection/static/js/main.f415f135.js",
+    "index.html": "/general-image-detection/index.html",
+    "main.d1206111.css.map": "/general-image-detection/static/css/main.d1206111.css.map",
+    "main.f415f135.js.map": "/general-image-detection/static/js/main.f415f135.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d1206111.css",
+    "static/js/main.f415f135.js"
+  ]
+}
