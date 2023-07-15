@@ -1,0 +1,41 @@
+.RecognitionInfo {
+    width: 400px;
+    background-color: white;
+    height: 600px;
+    overflow-y:auto;
+}
+.RecognitionInfo__list{
+    padding: 0;
+    margin: 0;
+}
+.RecognitionInfo__list-item-div {
+    display: flex;
+    gap:10px;
+}
+.RecognitionInfo__list-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+.RecognitionInfo__typeList {
+    text-align: left;
+    margin-left: 10px;
+    font-size: small;
+}
+.RecognitionInfo__list-item-percent {
+    font-size: small;
+}
+
+.concept-count-badge {
+    border: 2px dashed rgb(130, 92, 5); color: rgb(130, 92, 5);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    
+}
+.concept-type__title {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}

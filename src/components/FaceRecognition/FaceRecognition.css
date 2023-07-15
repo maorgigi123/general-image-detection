@@ -1,0 +1,29 @@
+.bounding-box {
+    position: absolute;
+    box-shadow: 0 0 0 3px #149df2 inset;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.bounding-box__info{
+    position: absolute;
+    opacity: 0.6;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+}
+.bounding-box__info-text{
+    color: black;
+    font-weight: bold;
+    height: 20px;
+    border-radius: 5px;
+    background-color: #148df2 ;
+    padding: 0;
+    margin: 0;
+}
+#inputImage {
+    max-height: 600px;
+}
