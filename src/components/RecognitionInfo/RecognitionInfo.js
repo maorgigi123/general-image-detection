@@ -46,7 +46,8 @@ const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSett
                             {
                                 if(all_items[i].type === data.type)
                                 {
-                                    items.push(all_items[i]);
+                                    if(all_items[i].value > slideValue)
+                                        items.push(all_items[i]);
                                 }
                             }
                             return (
