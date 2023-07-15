@@ -1,7 +1,7 @@
 import React from 'react';
 import './FaceRecognition.css';
 import { nanoid } from 'nanoid';
-const FaceRecognition = ( { imageUrl, faces }) => {
+const FaceRecognition = ( { imageUrl, faces, searchField, slideValue }) => {
     {if(imageUrl === ''){
         return null;
     }
@@ -14,6 +14,10 @@ const FaceRecognition = ( { imageUrl, faces }) => {
         {
             faces.map((user,id) =>{
                 try {
+                    if(!user.type.toLowerCase().includes(searchField.toLowerCase()))
+                        return null;
+                    if(user.value < slideValue)
+                        return null;
                     return [
                         <div  key={nanoid()}>
                                 <div className='bounding-box' 

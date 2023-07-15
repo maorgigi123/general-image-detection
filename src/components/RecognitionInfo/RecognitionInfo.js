@@ -4,22 +4,24 @@ import { nanoid } from 'nanoid';
 import { RecognitionItem } from './RecognitionItem';
 import RecognitionItemTitle from './RecognitionItemTitle';
 import SearchBox from '../SearchBox/SearchBox';
-
-const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField}) => {
-    let all_items = [];
+import Summary from '../Summary/Summary';
+const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSettingClick,onSlideChange, slideValue,onClickSummary }) => {    let all_items = [];
     let types = [];
     return(
         
             <div>
+                <Summary onSettingClick ={onSettingClick} onSlideChange={onSlideChange} slideValue={slideValue} onClickSummary ={onClickSummary}/>
                 <SearchBox searchChange ={searchChange} />
                 <div className="RecognitionInfo shadow-5">
+                    <div className="container_items">
                 {
-                    info_data.map( (data,i) => {
+                    info_data.map( (data) => {
                         try{
                             if(data.type.length > 1)
                                 all_items.push({type: data.type,value:data.value});
                             if(!types.includes(data.type))
                                 types.push(data.type);
+                            
                         }   
                         catch {
                             return null;
@@ -31,6 +33,8 @@ const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField}) => {
                     all_items.sort().map( (data, i) => {
                         if(!data.type.toLowerCase().includes(searchField.toLowerCase()))
                             return null;
+                        if(data.value < slideValue)
+                            return null;
                         if(types.includes(data.type))
                         {
                             const index = types.indexOf(data.type);
@@ -38,9 +42,9 @@ const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField}) => {
                                 types.splice(index, 1); // 2nd parameter means remove one item only
                             }
                             let items = [];
-                            for(var i =0; i< all_items.length; i++)
+                            for(let i =0; i< all_items.length; i++)
                             {
-                                if(all_items[i].type == data.type)
+                                if(all_items[i].type === data.type)
                                 {
                                     items.push(all_items[i]);
                                 }
@@ -57,6 +61,7 @@ const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField}) => {
                     })
                 
                 }
+                </div>
             </div>
             </div>
     );

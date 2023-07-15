@@ -60,6 +60,7 @@ class App extends Component{
       searchField : '',
       route: 'signin',
       isSignIn: false,
+      slideValue: 0,
     }
   }
 
@@ -98,6 +99,23 @@ class App extends Component{
     this.setState({searchField: e.target.value})
   }
 
+  onSettingClick = () => {
+    const model = document.getElementsByClassName('model')[0];
+    model.classList.toggle('show');
+
+  }
+  onSlideChange = (e) => {
+    this.setState({slideValue: e.target.value});
+  }
+
+  onClickSummary() {
+    const container_items = document.getElementsByClassName('container_items')[0];
+    const hideArrow = document.getElementsByClassName('summary_Arrow')[0];
+    container_items.classList.toggle('hide');
+    hideArrow.classList.toggle('hideArrow');
+    
+  }
+
   onButtonSubmit = () => {
     this.setState({ faces: [{}] });
     this.setState({imageUrl:this.state.input });
@@ -128,7 +146,7 @@ class App extends Component{
 
 
   render() {
-    const { isSignIn, imageUrl, route, box, faces, searchField} = this.state; 
+    const { isSignIn, imageUrl, route, box, faces, searchField,slideValue} = this.state; 
     return (
 
       <div className="App">
@@ -143,9 +161,9 @@ class App extends Component{
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit = {this.onButtonSubmit} />
               <div className='FaceRecognition_div'>
                   <div className='FaceRecognition_img'>
-                  <FaceRecognition faces = {faces} imageUrl ={imageUrl} />
+                  <FaceRecognition faces = {faces} imageUrl ={imageUrl} searchField ={searchField} slideValue ={slideValue}/>
                   </div>
-                  <RecognitionInfo info_data = {faces} imageUrl={imageUrl} searchChange = {this.searchChange} searchField ={searchField}/>
+                  <RecognitionInfo info_data = {faces} imageUrl={imageUrl} searchChange = {this.searchChange} searchField ={searchField} onSettingClick ={this.onSettingClick} onSlideChange ={this.onSlideChange} slideValue ={slideValue} onClickSummary={this.onClickSummary}/>
               </div>
           </div>
         : ( route === 'signin') ? 

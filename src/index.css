@@ -16,7 +16,7 @@ img {
 .FaceRecognition_div {
     width: 100%;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     margin-top: 25px;
     padding-left: 50px;
     padding-right: 50px;
