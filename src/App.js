@@ -10,7 +10,6 @@ import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import ParticlesBg from 'particles-bg'
-import Cropper from 'cropperjs';
 
 const returnRequestOptions =  (imageUrl ) => {
    // Your PAT (Personal Access Token) can be found in the portal under Authentification

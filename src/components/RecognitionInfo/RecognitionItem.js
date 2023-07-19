@@ -1,6 +1,5 @@
 import React from 'react'
 import { nanoid } from 'nanoid';
-import CropImageCanvas  from './CropImageCanvas';
 export const RecognitionItem = (  {items, imageUrl, cropImage} ) => {
 
 
@@ -18,7 +17,6 @@ export const RecognitionItem = (  {items, imageUrl, cropImage} ) => {
                                             </path>
                                             </svg>
                                             <img onLoad={() =>cropImage(items, imageUrl)} className="pointer img" src={imageUrl} width="20" height="20"/>
-                                            {/* {<CropImageCanvas/>} */}
                                         </div>
                                         <p className="RecognitionInfo__list-item-percent">{data.value.toFixed(3)}</p>
                                     </li> 
