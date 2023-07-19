@@ -1,5 +1,5 @@
 
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import Navigation from "./components/Navigation/Navigation";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import RecognitionInfo from "./components/RecognitionInfo/RecognitionInfo";
@@ -10,14 +10,15 @@ import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import ParticlesBg from 'particles-bg'
+import Cropper from 'cropperjs';
 
 const returnRequestOptions =  (imageUrl ) => {
    // Your PAT (Personal Access Token) can be found in the portal under Authentification
-   const PAT = 'ea1aac5d1423495982117339e065caed';
+   const PAT = [YOUR_API_KEY_HERE];
    // Specify the correct user_id/app_id pairings
    // Since you're making inferences outside your app's scope
-   const USER_ID = 'gigigames';       
-   const APP_ID = 'faceRecognition';
+   const USER_ID = [YOUR_API_USER_ID];       
+   const APP_ID = [UOUR_API_APP_ID];
    // Change these to whatever model and image URL you want to use
    const MODEL_ID = 'general-image-detection';
    const IMAGE_URL = imageUrl;
@@ -61,6 +62,7 @@ class App extends Component{
       route: 'signin',
       isSignIn: false,
       slideValue: 0,
+      recognitionInfo: []
     }
   }
 
@@ -144,6 +146,41 @@ class App extends Component{
     this.setState({route:route});
   }
 
+  
+cropImage = (recognitionInfo , imageUrl)  => {
+    if(this.state.recognitionInfo.includes(recognitionInfo[0].type))
+      return null
+
+    var joined = this.state.recognitionInfo.push(recognitionInfo[0].type);
+
+      this.setState({
+        recognitionInfo: [...this.state.recognitionInfo, joined]
+    });
+    let parent = document.getElementsByClassName('RecognitionInfo')[0].children[0].children[this.state.recognitionInfo.length-1];
+    parent = parent.children[1];  
+    var image = new Image();
+    image.src = imageUrl;
+
+    // var  canvas  = parent.children[0].children[0].children[0].children[0].children[2].children[0];
+    image.onload = function(){
+    for(var i=0; i < recognitionInfo.length; i++)
+    {
+            const canvas = document.createElement("canvas");
+            document.getElementById(recognitionInfo[0].type+' '+i).children[0].children[0].children[0].appendChild(canvas)
+            canvas.height = 50;
+            canvas.width = 50;
+            canvas.style = "border: 2px solid #CCC;";
+            const ctx = canvas.getContext("2d");
+
+            
+            console.log('left: '+recognitionInfo[i].leftCol +'   right: ' + recognitionInfo[i].rightCol+'   bottom ' + recognitionInfo[i].bottomRow+'   top ' + recognitionInfo[i].topRow)
+            ctx.drawImage(image,21,20,50,1400, 0, 0, canvas.width, canvas.height);
+    }
+  }
+}
+
+
+
 
   render() {
     const { isSignIn, imageUrl, route, box, faces, searchField,slideValue} = this.state; 
@@ -163,7 +200,7 @@ class App extends Component{
                   <div className='FaceRecognition_img'>
                   <FaceRecognition faces = {faces} imageUrl ={imageUrl} searchField ={searchField} slideValue ={slideValue}/>
                   </div>
-                  <RecognitionInfo info_data = {faces} imageUrl={imageUrl} searchChange = {this.searchChange} searchField ={searchField} onSettingClick ={this.onSettingClick} onSlideChange ={this.onSlideChange} slideValue ={slideValue} onClickSummary={this.onClickSummary}/>
+                  <RecognitionInfo info_data = {faces} imageUrl={imageUrl} searchChange = {this.searchChange} searchField ={searchField} onSettingClick ={this.onSettingClick} onSlideChange ={this.onSlideChange} slideValue ={slideValue} onClickSummary={this.onClickSummary} cropImage={this.cropImage} />
               </div>
           </div>
         : ( route === 'signin') ? 

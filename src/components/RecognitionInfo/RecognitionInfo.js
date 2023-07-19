@@ -5,7 +5,8 @@ import { RecognitionItem } from './RecognitionItem';
 import RecognitionItemTitle from './RecognitionItemTitle';
 import SearchBox from '../SearchBox/SearchBox';
 import Summary from '../Summary/Summary';
-const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSettingClick,onSlideChange, slideValue,onClickSummary }) => {    let all_items = [];
+const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSettingClick,onSlideChange, slideValue,onClickSummary, cropImage }) => {    
+    let all_items = [];
     let types = [];
     return(
         
@@ -18,7 +19,12 @@ const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSett
                     info_data.map( (data) => {
                         try{
                             if(data.type.length > 1)
-                                all_items.push({type: data.type,value:data.value});
+                                all_items.push({type: data.type,
+                                    value:data.value,
+                                    bottomRow: data.bottomRow,
+                                    leftCol:data.leftCol,
+                                    rightCol:data.rightCol,
+                                    topRow:data.topRow});
                             if(!types.includes(data.type))
                                 types.push(data.type);
                             
@@ -52,11 +58,9 @@ const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSett
                             }
                             return (
                                 <div key= {nanoid()}>
-                                
                                     <RecognitionItemTitle items={data} count = {items.length.toString()}/>
-                                    <RecognitionItem items={items} imageUrl={imageUrl} />
+                                    <RecognitionItem items={items} imageUrl={imageUrl}  cropImage = {cropImage}/>
                                 </div>
-                                
                             );
                         }
                     })

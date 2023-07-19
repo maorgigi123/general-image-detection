@@ -1,7 +1,7 @@
 import React from 'react'
 import { nanoid } from 'nanoid';
 
-const RecognitionItemTitle = (  {items, count} ) => {
+const RecognitionItemTitle = (  {items, count,cropImage } ) => {
     let item = items.items;
     return (
         <div key={nanoid()} id ={items.type}>
@@ -9,7 +9,6 @@ const RecognitionItemTitle = (  {items, count} ) => {
                     <p className="concept-count-badge">{count}</p>
                     <p className="RecognitionInfo__typeList">{items.type}</p>
                 </div>
-                
         </div>
     );
     
