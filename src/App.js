@@ -14,10 +14,10 @@ import { toHaveFocus } from "@testing-library/jest-dom/matchers";
 
 const returnRequestOptions =  (imageUrl ) => {
    // Your PAT (Personal Access Token) can be found in the portal under Authentification
-   const PAT = 'ea1aac5d1423495982117339e065caed';
+   const PAT = 'e0af9ed0c676465f8a627476e3911d43';
    // Specify the correct user_id/app_id pairings
    // Since you're making inferences outside your app's scope
-   const USER_ID = 'gigigames';       
+   const USER_ID = 'maorgigi';       
    const APP_ID = 'faceRecognition';
    // Change these to whatever model and image URL you want to use
   //  const MODEL_ID = 'general-image-detection';
@@ -83,7 +83,7 @@ class App extends Component{
     }})
 
   }
-
+  
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.region_info.bounding_box;
     const type = data.data.concepts[0].name;
@@ -141,33 +141,33 @@ class App extends Component{
     this.setState({imageUrl:this.state.input });
 
     fetch("https://api.clarifai.com/v2/models/" + "general-image-detection" + "/outputs", returnRequestOptions(this.state.input))
-    .then(response => response.json())
-    .then(result => {for(var i =0; i < result.outputs[0].data.regions.length; i++)
+    .then(response =>response.json())
+    .then(result => {
+      if(result)
       {
-        if(result){
-          fetch('http://localhost:/image', {
+        fetch('http://localhost:3000/image',{
             method:'put',
             headers : {'content-Type':'application/json'},
             body:JSON.stringify({
-              id : this.state.user.id
-            })
-          }).then(res => res.json())
-          .then(count => {
-            this.setState({'user': {
-              ...user,
-              entries:count
-            }});
-          })
-        }
-        this.displayFaceBox(this.calculateFaceLocation(result.outputs[0].data.regions[i]))
+                id: this.state.user.id
+              })
+        }).then(response => response.json())
+        .then(count => {
+          this.setState(Object.assign(this.state.user, { entries: count }))
+        })
+
       }
-    }
+
+        for(var i =0; i < result.outputs[0].data.regions.length; i++)
+        {
+          this.displayFaceBox(this.calculateFaceLocation(result.outputs[0].data.regions[i]))
+        }
+      }
     )
     .catch(error => console.log('error', error));
 
 
   }
-
   onRouteChange = (route) =>{
     if(route ==='signout') {
       this.setState({isSignIn:false})
@@ -179,35 +179,36 @@ class App extends Component{
     this.setState({route:route});
   }
 
-  
 cropImage = (recognitionInfo , imageUrl)  => {
-    if(this.state.recognitionInfo.includes(recognitionInfo[0].type))
-      return null
+  
+    // if(this.state.recognitionInfo.includes(recognitionInfo[0].type))
+    //   return null
 
-    var joined = this.state.recognitionInfo.push(recognitionInfo[0].type);
+    // var joined = this.state.recognitionInfo.push(recognitionInfo[0].type);
 
-      this.setState({
-        recognitionInfo: [...this.state.recognitionInfo, joined]
-    });
-    // let parent = document.getElementsByClassName('RecognitionInfo')[0].children[0].children[this.state.recognitionInfo.length-1];
+    //   this.setState({
+    //     recognitionInfo: [...this.state.recognitionInfo, joined]
+    // });
+
+
+    //let parent = document.getElementsByClassName('RecognitionInfo')[0].children[0].children[this.state.recognitionInfo.length-1];
     var image = new Image();
     image.src = imageUrl;
 
-    // var  canvas  = parent.children[0].children[0].children[0].children[0].children[2].children[0];
+    //var  canvas  = parent.children[0].children[0].children[0].children[0].children[2].children[0];
     image.onload = function(){
-    for(var i=0; i < recognitionInfo.length; i++)
-    {
-            const canvas = document.createElement("canvas");
-            document.getElementById(recognitionInfo[0].type+' '+i).children[0].children[0].children[0].appendChild(canvas)
-            canvas.height = 50;
-            canvas.width = 50;
-            canvas.style = "border: 2px solid #CCC;";
-            const ctx = canvas.getContext("2d");
-
-            
-            console.log('left: '+recognitionInfo[i].leftCol +'   right: ' + recognitionInfo[i].rightCol+'   bottom ' + recognitionInfo[i].bottomRow+'   top ' + recognitionInfo[i].topRow)
-            ctx.drawImage(image,21,20,50,1400, 0, 0, canvas.width, canvas.height);
-    }
+      for(var i=0; i < recognitionInfo.length; i++)
+      {
+              const canvas =document.getElementById(recognitionInfo[0].type+' '+i).children[0].children[0].children[0].children[2];
+              document.getElementById(recognitionInfo[0].type+' '+i).children[0].children[0].children[0].appendChild(canvas)
+              canvas.height = 50;
+              canvas.width = 50;
+              canvas.style = "border: 2px solid #CCC;";
+              const ctx = canvas.getContext("2d");
+              console.log(this.state.box); /// no read box
+              //console.log('left: '+this.state.box[i].leftCol +'   right: ' + this.state.box[i].rightCol+'   bottom ' + this.state.box[i].bottomRow+'   top ' + this.state.box[i].topRow)
+              ctx.drawImage(image,10, 10, 150, 180);
+      }
   }
 }
 
@@ -215,7 +216,7 @@ cropImage = (recognitionInfo , imageUrl)  => {
 
 
   render() {
-    const { isSignIn, imageUrl, route, faces, searchField,slideValue} = this.state; 
+    const { isSignIn, imageUrl, route, faces, searchField,slideValue, user} = this.state; 
     return (
 
       <div className="App">
@@ -226,13 +227,15 @@ cropImage = (recognitionInfo , imageUrl)  => {
         { route === 'home' 
         ? <div>
               <Logo />
-              <Rank name={this.state.user.name} entries={this.state.user.entries}/>
+              <Rank name={user.name} entries={user.entries}/>
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit = {this.onButtonSubmit} />
               <div className='FaceRecognition_div'>
                   <div className='FaceRecognition_img'>
                   <FaceRecognition faces = {faces} imageUrl ={imageUrl} searchField ={searchField} slideValue ={slideValue}/>
                   </div>
-                  <RecognitionInfo info_data = {faces} imageUrl={imageUrl} searchChange = {this.searchChange} searchField ={searchField} onSettingClick ={this.onSettingClick} onSlideChange ={this.onSlideChange} slideValue ={slideValue} onClickSummary={this.onClickSummary} cropImage={this.cropImage} />
+                   <RecognitionInfo info_data = {faces} imageUrl={imageUrl} searchChange = {this.searchChange} searchField ={searchField} onSettingClick ={this.onSettingClick} onSlideChange ={this.onSlideChange} slideValue ={slideValue} onClickSummary={this.onClickSummary} cropImage={this.cropImage}/>
+                  
+                  
               </div>
           </div>
         : ( route === 'signin') ? 

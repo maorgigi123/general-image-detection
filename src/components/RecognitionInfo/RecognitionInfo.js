@@ -5,7 +5,7 @@ import { RecognitionItem } from './RecognitionItem';
 import RecognitionItemTitle from './RecognitionItemTitle';
 import SearchBox from '../SearchBox/SearchBox';
 import Summary from '../Summary/Summary';
-const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSettingClick,onSlideChange, slideValue,onClickSummary, cropImage }) => {    
+const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSettingClick,onSlideChange, slideValue,onClickSummary, cropImage}) => {    
     let all_items = [];
     let types = [];
     return(
@@ -25,9 +25,9 @@ const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSett
                                     leftCol:data.leftCol,
                                     rightCol:data.rightCol,
                                     topRow:data.topRow});
+                                                            
                             if(!types.includes(data.type))
                                 types.push(data.type);
-                            
                         }   
                         catch {
                             return null;
@@ -56,9 +56,11 @@ const RecognitionInfo = ({info_data, imageUrl, searchChange, searchField, onSett
                                         items.push(all_items[i]);
                                 }
                             }
+
                             return (
                                 <div key= {nanoid()}>
                                     <RecognitionItemTitle items={data} count = {items.length.toString()}/>
+
                                     <RecognitionItem items={items} imageUrl={imageUrl}  cropImage = {cropImage}/>
                                 </div>
                             );
