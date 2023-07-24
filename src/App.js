@@ -1,5 +1,5 @@
 
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import Navigation from "./components/Navigation/Navigation";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import RecognitionInfo from "./components/RecognitionInfo/RecognitionInfo";
@@ -10,16 +10,17 @@ import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import ParticlesBg from 'particles-bg'
+import { toHaveFocus } from "@testing-library/jest-dom/matchers";
 
 const returnRequestOptions =  (imageUrl ) => {
    // Your PAT (Personal Access Token) can be found in the portal under Authentification
-   const PAT = [YOUR_API_KEY_HERE];
+   const PAT = 'ea1aac5d1423495982117339e065caed';
    // Specify the correct user_id/app_id pairings
    // Since you're making inferences outside your app's scope
-   const USER_ID = [YOUR_API_USER_ID];       
-   const APP_ID = [UOUR_API_APP_ID];
+   const USER_ID = 'gigigames';       
+   const APP_ID = 'faceRecognition';
    // Change these to whatever model and image URL you want to use
-   const MODEL_ID = 'general-image-detection';
+  //  const MODEL_ID = 'general-image-detection';
    const IMAGE_URL = imageUrl;
 
    const raw = JSON.stringify({
@@ -61,8 +62,26 @@ class App extends Component{
       route: 'signin',
       isSignIn: false,
       slideValue: 0,
-      recognitionInfo: []
+      recognitionInfo: [],
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
+  }
+
+  loadUser = ( data ) => {
+    this.setState({ user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }})
+
   }
 
   calculateFaceLocation = (data) => {
@@ -121,10 +140,25 @@ class App extends Component{
     this.setState({ faces: [{}] });
     this.setState({imageUrl:this.state.input });
 
-    fetch("https://api.clarifai.com/v2/models/" + 'general-image-detection' + "/outputs", returnRequestOptions(this.state.input))
+    fetch("https://api.clarifai.com/v2/models/" + "general-image-detection" + "/outputs", returnRequestOptions(this.state.input))
     .then(response => response.json())
     .then(result => {for(var i =0; i < result.outputs[0].data.regions.length; i++)
       {
+        if(result){
+          fetch('http://localhost:/image', {
+            method:'put',
+            headers : {'content-Type':'application/json'},
+            body:JSON.stringify({
+              id : this.state.user.id
+            })
+          }).then(res => res.json())
+          .then(count => {
+            this.setState({'user': {
+              ...user,
+              entries:count
+            }});
+          })
+        }
         this.displayFaceBox(this.calculateFaceLocation(result.outputs[0].data.regions[i]))
       }
     }
@@ -155,8 +189,7 @@ cropImage = (recognitionInfo , imageUrl)  => {
       this.setState({
         recognitionInfo: [...this.state.recognitionInfo, joined]
     });
-    let parent = document.getElementsByClassName('RecognitionInfo')[0].children[0].children[this.state.recognitionInfo.length-1];
-    parent = parent.children[1];  
+    // let parent = document.getElementsByClassName('RecognitionInfo')[0].children[0].children[this.state.recognitionInfo.length-1];
     var image = new Image();
     image.src = imageUrl;
 
@@ -182,7 +215,7 @@ cropImage = (recognitionInfo , imageUrl)  => {
 
 
   render() {
-    const { isSignIn, imageUrl, route, box, faces, searchField,slideValue} = this.state; 
+    const { isSignIn, imageUrl, route, faces, searchField,slideValue} = this.state; 
     return (
 
       <div className="App">
@@ -193,7 +226,7 @@ cropImage = (recognitionInfo , imageUrl)  => {
         { route === 'home' 
         ? <div>
               <Logo />
-              <Rank />
+              <Rank name={this.state.user.name} entries={this.state.user.entries}/>
               <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit = {this.onButtonSubmit} />
               <div className='FaceRecognition_div'>
                   <div className='FaceRecognition_img'>
@@ -203,8 +236,8 @@ cropImage = (recognitionInfo , imageUrl)  => {
               </div>
           </div>
         : ( route === 'signin') ? 
-          <Signin onRouteChange = {this.onRouteChange}/>:
-          <Register onRouteChange={this.onRouteChange} />
+          <Signin loadUser= {this.loadUser} onRouteChange = {this.onRouteChange}/>:
+          <Register loadUser= {this.loadUser} onRouteChange={this.onRouteChange} />
         }
         
       </div>
