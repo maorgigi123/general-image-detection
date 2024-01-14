@@ -26,9 +26,22 @@ class Signin extends React.Component {
         }).then(res => res.json())
         .then(user =>{
             if(user.id){
+                document.getElementById('errorMessage-sign-in').classList.add('dn');
                 this.props.loadUser(user);
                 this.props.onRouteChange('home');
+
             }
+            else{
+                console.log(user);
+                document.getElementById('errorMessage-sign-in').classList.remove('dn');
+                document.getElementById('errorMessage-sign-in').textContent = '*' +user;
+            }
+        })
+        .catch(err => {
+            document.getElementById('errorMessage-sign-in').classList.remove('dn');
+            document.getElementById('errorMessage-sign-in').textContent = '* something happened try again';
+
+            console.loh(err)
         })
     }
     render() {
@@ -47,8 +60,10 @@ class Signin extends React.Component {
                             <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
                             <input onChange={this.onPasswordChange} className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="password" name="password"  id="password"/>
                         </div>
+                        <p className="dark-red dn" id="errorMessage-sign-in">* unable to login </p>
                         </fieldset>
-                        <div className="">
+                        
+                        <div >
                         <input onClick={this.onSubmitSignin} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in"/>
                         </div>
                         <div className="lh-copy mt3">

@@ -50,10 +50,7 @@ const returnRequestOptions =  (imageUrl ) => {
  return requestOptions;
 }
 
-class App extends Component{
-  constructor() {
-    super();
-    this.state = {
+const initialState = {
       input: '',
       imageUrl: '',
       box: {},
@@ -71,6 +68,11 @@ class App extends Component{
         joined: ''
       }
     }
+
+class App extends Component{
+  constructor() {
+    super();
+    this.state = initialState;
   }
 
   loadUser = ( data ) => {
@@ -140,9 +142,16 @@ class App extends Component{
     this.setState({ faces: [{}] });
     this.setState({imageUrl:this.state.input });
 
-    fetch("https://api.clarifai.com/v2/models/" + "general-image-detection" + "/outputs", returnRequestOptions(this.state.input))
+    fetch('http://localhost:3000/imageApi',{
+            method:'post',
+            headers : {'content-Type':'application/json'},
+            body:JSON.stringify({
+                input: this.state.input
+      })
+    })
     .then(response =>response.json())
     .then(result => {
+      console.log(result)
       if(result)
       {
         fetch('http://localhost:3000/image',{
@@ -155,6 +164,7 @@ class App extends Component{
         .then(count => {
           this.setState(Object.assign(this.state.user, { entries: count }))
         })
+        .catch(console.log)
 
       }
 
@@ -170,7 +180,7 @@ class App extends Component{
   }
   onRouteChange = (route) =>{
     if(route ==='signout') {
-      this.setState({isSignIn:false})
+      this.setState(initialState)
     }
     else  if(route==='home'){
       this.setState({isSignIn:true})
@@ -199,15 +209,38 @@ cropImage = (recognitionInfo , imageUrl)  => {
     image.onload = function(){
       for(var i=0; i < recognitionInfo.length; i++)
       {
-              const canvas =document.getElementById(recognitionInfo[0].type+' '+i).children[0].children[0].children[0].children[2];
+        try{
+            const canvas =document.getElementById(recognitionInfo[0].type+' '+i).children[0].children[0].children[0].children[2];
               document.getElementById(recognitionInfo[0].type+' '+i).children[0].children[0].children[0].appendChild(canvas)
               canvas.height = 50;
               canvas.width = 50;
               canvas.style = "border: 2px solid #CCC;";
               const ctx = canvas.getContext("2d");
-              console.log(this.state.box); /// no read box
-              //console.log('left: '+this.state.box[i].leftCol +'   right: ' + this.state.box[i].rightCol+'   bottom ' + this.state.box[i].bottomRow+'   top ' + this.state.box[i].topRow)
-              ctx.drawImage(image,10, 10, 150, 180);
+              console.log(canvas)
+              //console.log(this.state.box); /// no read box
+              // console.log('left: '+this.state.box[i].leftCol +
+              //   'right: ' + this.state.box[i].rightCol
+              //   +'bottom ' + this.state.box[i].bottomRow+
+              //   'top ' + this.state.box[i].topRow)
+
+
+              //ctx.drawImage(image,0, 0, 400, 400,900,900
+                const _width = 900;
+                const _height = 900;
+                const _leftCol =  recognitionInfo[i].leftCol * _width;
+                const _topRow = recognitionInfo[i].topRow * _height;
+                const _right_col = _width - (recognitionInfo[i].rightCol* _width);
+                const _bottomRow =  _height - (recognitionInfo[i].bottomRow* _height);    
+                // draw cropped image
+                const w = _leftCol * _right_col /  2;
+                const h = _topRow * _bottomRow /  2;
+
+                ctx.drawImage(image,604,400, 2500,2500,0,50,900,900);
+        }
+        catch{
+          console.log('a')
+        }
+              
       }
   }
 }

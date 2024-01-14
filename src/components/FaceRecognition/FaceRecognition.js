@@ -10,7 +10,7 @@ const FaceRecognition = ( { imageUrl, faces, searchField, slideValue }) => {
     return (
         <div className='center ma'>
             <div className='relative mt3'>
-        <img className='shadow-5' id='inputImage' alt='' src = { imageUrl} width='900px' height='auto'/>
+        <img className='shadow-5' id='inputImage' alt='' src = { imageUrl} width='900px' height='900px'/>
         {
             faces.map((user,id) =>{
                 try {

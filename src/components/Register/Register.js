@@ -29,10 +29,21 @@ class Register extends React.Component{
             })
         }).then(res => res.json())
         .then(user =>{
-            if(user){
+            if(user.id){
+                document.getElementById('errorMessage-register').classList.add('dn');
                 this.props.loadUser(user)
                 this.props.onRouteChange('home');
             }
+            else {
+                document.getElementById('errorMessage-register').classList.remove('dn');
+                document.getElementById('errorMessage-register').textContent = '*' +user;
+            }
+        })
+         .catch(err => {
+            document.getElementById('errorMessage-register').classList.remove('dn');
+            document.getElementById('errorMessage-register').textContent = '* something happened try again';
+
+            console.loh(err)
         })
     }
     render(){
@@ -54,6 +65,7 @@ class Register extends React.Component{
                             <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
                             <input onChange = {this.onPasswordChange} className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="password" name="password"  id="password"/>
                         </div>
+                        <p className="dark-red dn" id="errorMessage-register">* unable to login </p>
                         <input onClick={this.onSubmitRegister} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="register"/>
                         {/* <label class="pa0 ma0 lh-copy f6 pointer"><input type="checkbox"/> Remember me</label> */}
                         </fieldset>
