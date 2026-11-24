@@ -14,11 +14,11 @@ import { toHaveFocus } from "@testing-library/jest-dom/matchers";
 
 const returnRequestOptions =  (imageUrl ) => {
    // Your PAT (Personal Access Token) can be found in the portal under Authentification
-   const PAT = 'e0af9ed0c676465f8a627476e3911d43';
+   const PAT = "YOUR PAT";
    // Specify the correct user_id/app_id pairings
    // Since you're making inferences outside your app's scope
-   const USER_ID = 'maorgigi';       
-   const APP_ID = 'faceRecognition';
+   const USER_ID = 'YOUR USER ID';       
+   const APP_ID = 'YOUR APP ID';
    // Change these to whatever model and image URL you want to use
   //  const MODEL_ID = 'general-image-detection';
    const IMAGE_URL = imageUrl;
